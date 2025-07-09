@@ -1,20 +1,104 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, GraduationCap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Eye, EyeOff, GraduationCap, User, BookOpen, Users } from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const demoAccounts = [
+    {
+      role: 'Estudiante',
+      email: 'estudiante@demo.com',
+      password: 'demo123',
+      icon: User,
+      description: 'Perfil completado - María González',
+      bgColor: 'bg-primary'
+    },
+    {
+      role: 'Estudiante Nuevo',
+      email: 'nuevo@demo.com',
+      password: 'demo123',
+      icon: User,
+      description: 'Requiere configuración - Carlos Ruiz',
+      bgColor: 'bg-secondary'
+    },
+    {
+      role: 'Profesor',
+      email: 'profesor@demo.com',
+      password: 'demo123',
+      icon: BookOpen,
+      description: 'Prof. Ana Martínez',
+      bgColor: 'bg-accent'
+    },
+    {
+      role: 'Padre/Madre',
+      email: 'padre@demo.com',
+      password: 'demo123',
+      icon: Users,
+      description: 'Juan Pérez',
+      bgColor: 'bg-muted'
+    }
+  ];
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aquí iría la lógica de autenticación
-    console.log("Login attempt:", { email, password });
+    setIsLoading(true);
+
+    try {
+      const success = await login(email, password);
+      if (success) {
+        toast({
+          title: "¡Bienvenido!",
+          description: "Has iniciado sesión correctamente"
+        });
+        
+        // Redirigir según el rol del usuario
+        const user = useAuthStore.getState().user;
+        if (user?.role === 'student' && user.isNewUser) {
+          navigate('/profile-setup');
+        } else if (user?.role === 'student') {
+          navigate('/subjects');
+        } else if (user?.role === 'teacher') {
+          navigate('/teacher-dashboard');
+        } else if (user?.role === 'parent') {
+          navigate('/parent-dashboard');
+        }
+      } else {
+        toast({
+          title: "Error de acceso",
+          description: "Credenciales incorrectas",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al iniciar sesión",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleDemoLogin = (demoEmail: string, demoPassword: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+  };
+
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
@@ -26,6 +110,30 @@ const Login = () => {
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Virtual Tutor Academy</h1>
           <p className="text-muted-foreground">Accede a tu cuenta para continuar aprendiendo</p>
+        </div>
+
+        {/* Cuentas de demostración */}
+        <div className="mb-6">
+          <h3 className="text-sm font-medium text-foreground mb-3">Cuentas de Demostración:</h3>
+          <div className="grid grid-cols-1 gap-2">
+            {demoAccounts.map((account, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                size="sm"
+                className="justify-start h-auto p-3 text-left"
+                onClick={() => handleDemoLogin(account.email, account.password)}
+              >
+                <div className={`w-8 h-8 rounded-lg ${account.bgColor} flex items-center justify-center mr-3`}>
+                  <account.icon className="w-4 h-4 text-primary-foreground" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-sm">{account.role}</div>
+                  <div className="text-xs text-muted-foreground">{account.description}</div>
+                </div>
+              </Button>
+            ))}
+          </div>
         </div>
 
         {/* Formulario de login */}
@@ -86,8 +194,9 @@ const Login = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                disabled={isLoading}
               >
-                Iniciar Sesión
+                {isLoading ? "Iniciando..." : "Iniciar Sesión"}
               </Button>
             </form>
 
