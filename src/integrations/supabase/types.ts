@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      n8n_chat_histories: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
+        }
+        Relationships: []
+      }
       usuario: {
         Row: {
           created_at: string
