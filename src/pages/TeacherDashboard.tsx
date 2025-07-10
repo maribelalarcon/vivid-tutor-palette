@@ -291,13 +291,31 @@ const TeacherDashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Gestión de Materiales</span>
-                  <Button>
-                    <Upload className="w-4 h-4 mr-2" />
-                    Subir Material
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button variant="outline">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Subir desde Google Drive
+                    </Button>
+                    <Button>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Crear Nuevo
+                    </Button>
+                  </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
+                <div className="mb-6 p-4 border-2 border-dashed border-border rounded-lg text-center">
+                  <div className="flex flex-col items-center space-y-2">
+                    <Upload className="w-8 h-8 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">
+                      Arrastra archivos aquí o haz clic para subir desde Google Drive
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Soporta: PDF, DOC, PPT, MP4, JPG, PNG (máx. 100MB)
+                    </p>
+                  </div>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {materials.map((material) => (
                     <Card key={material.id} className="border-border hover:shadow-md transition-shadow">
@@ -314,7 +332,7 @@ const TeacherDashboard = () => {
                         </div>
                         <h3 className="font-medium text-foreground mb-2">{material.title}</h3>
                         <p className="text-sm text-muted-foreground mb-3">
-                          {material.uploads} descargas
+                          {material.uploads} descargas • Geografía e Historia
                         </p>
                         <div className="flex space-x-2">
                           <Button variant="outline" size="sm" className="flex-1">
@@ -339,16 +357,34 @@ const TeacherDashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Gestión de Exámenes</span>
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Crear Examen
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button variant="outline">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Subir desde Google Drive
+                    </Button>
+                    <Button>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Crear Formulario
+                    </Button>
+                  </div>
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="mb-6 p-4 border-2 border-dashed border-accent/20 bg-accent/5 rounded-lg text-center">
+                  <div className="flex flex-col items-center space-y-2">
+                    <GraduationCap className="w-8 h-8 text-accent" />
+                    <p className="text-sm text-foreground font-medium">
+                      Subir Exámenes desde Google Drive
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Soporta: PDF, DOC, Formularios de Google • Calificación manual o semiautomática
+                    </p>
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   {exams.map((exam) => (
-                    <Card key={exam.id} className="border-border">
+                    <Card key={exam.id} className="border-border hover:shadow-md transition-shadow">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
@@ -358,8 +394,16 @@ const TeacherDashboard = () => {
                             <div>
                               <h3 className="font-medium text-foreground">{exam.title}</h3>
                               <p className="text-sm text-muted-foreground">
-                                {exam.type} • {exam.students} estudiantes
+                                {exam.type} • {exam.students} estudiantes • Geografía e Historia
                               </p>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Badge variant="outline" className="text-xs">
+                                  Google Drive
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  Calificación {exam.status === 'calificado' ? 'manual' : 'semiautomática'}
+                                </span>
+                              </div>
                             </div>
                           </div>
                           <div className="flex items-center space-x-3">
