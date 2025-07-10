@@ -27,19 +27,6 @@ const SubjectSelection = () => {
   const [hoveredSubject, setHoveredSubject] = useState<string | null>(null);
   const [isTutorChatOpen, setIsTutorChatOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchWebhookData = async () => {
-      try {
-        const response = await fetch('https://jmog.app.n8n.cloud/webhook-test/bf4dd093-bb02-472c-9454-7ab9af97bd1d');
-        const data = await response.text();
-        console.log('Webhook response:', data);
-      } catch (error) {
-        console.error('Error fetching webhook data:', error);
-      }
-    };
-
-    fetchWebhookData();
-  }, []);
 
   const handleSubjectSelect = (subjectId: string) => {
     trackActivity({
@@ -61,13 +48,22 @@ const SubjectSelection = () => {
     navigate('/login');
   };
 
-  const openTutorChat = () => {
+  const openTutorChat = async () => {
     setIsTutorChatOpen(true);
     trackActivity({
       action: 'tutor_chat_opened',
       tutorType: user?.profile?.tutorPreferences?.characterDescription,
       timestamp: new Date().toISOString()
     });
+
+    // Enviar request al webhook cuando se abre el chat del tutor
+    try {
+      const response = await fetch('https://jmog.app.n8n.cloud/webhook-test/bf4dd093-bb02-472c-9454-7ab9af97bd1d');
+      const data = await response.text();
+      console.log('Webhook response:', data);
+    } catch (error) {
+      console.error('Error fetching webhook data:', error);
+    }
   };
 
   const getTutorButtonText = () => {
