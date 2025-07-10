@@ -12,15 +12,20 @@ import {
   Play,
   Settings,
   LogOut,
-  Sparkles
+  Sparkles,
+  MessageCircle,
+  Bot,
+  Zap
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { subjects } from "@/lib/types";
+import VirtualTutorChat from "@/components/VirtualTutorChat";
 
 const SubjectSelection = () => {
   const navigate = useNavigate();
   const { user, logout, trackActivity } = useAuthStore();
   const [hoveredSubject, setHoveredSubject] = useState<string | null>(null);
+  const [isTutorChatOpen, setIsTutorChatOpen] = useState(false);
 
   const handleSubjectSelect = (subjectId: string) => {
     trackActivity({
@@ -40,6 +45,30 @@ const SubjectSelection = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const openTutorChat = () => {
+    setIsTutorChatOpen(true);
+    trackActivity({
+      action: 'tutor_chat_opened',
+      tutorType: user?.profile?.tutorPreferences?.characterDescription,
+      timestamp: new Date().toISOString()
+    });
+  };
+
+  const getTutorButtonText = () => {
+    const description = user?.profile?.tutorPreferences?.characterDescription;
+    if (!description) return "Hablar con tu Tutor Virtual";
+    
+    // Extract name from description if it mentions famous people
+    if (description.toLowerCase().includes('messi')) return "Hablar con Messi";
+    if (description.toLowerCase().includes('lara croft')) return "Hablar con Lara Croft";
+    if (description.toLowerCase().includes('sherlock')) return "Hablar con Sherlock";
+    if (description.toLowerCase().includes('marie curie')) return "Hablar con Marie Curie";
+    if (description.toLowerCase().includes('spider-man') || description.toLowerCase().includes('spiderman')) return "Hablar con Spider-Man";
+    if (description.toLowerCase().includes('mulan')) return "Hablar con Mulan";
+    
+    return `Hablar con ${description.split(' ').slice(0, 3).join(' ')}`;
   };
 
   return (
@@ -89,16 +118,50 @@ const SubjectSelection = () => {
           </p>
           
           {user?.profile?.tutorPreferences && (
-            <div className="bg-card/50 rounded-lg p-4 max-w-md mx-auto">
-              <p className="text-sm text-muted-foreground mb-2">
+            <div className="bg-card/50 rounded-lg p-4 max-w-md mx-auto mb-6">
+              <p className="text-sm text-muted-foreground mb-3">
                 Tu tutor virtual está listo:
               </p>
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-sm font-medium text-foreground mb-4">
                 {user.profile.tutorPreferences.characterDescription}
               </p>
+              <Button 
+                onClick={openTutorChat}
+                className="w-full bg-gradient-primary hover:bg-gradient-primary/90 text-primary-foreground font-medium"
+                size="lg"
+              >
+                <MessageCircle className="w-5 h-5 mr-2" />
+                {getTutorButtonText()}
+                <Sparkles className="w-4 h-4 ml-2" />
+              </Button>
             </div>
           )}
         </div>
+
+        {/* Tutor destacado si no tiene configuración */}
+        {!user?.profile?.tutorPreferences && (
+          <div className="text-center mb-8">
+            <Card className="max-w-md mx-auto bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+              <CardContent className="p-6">
+                <Bot className="w-12 h-12 mx-auto mb-3 text-primary" />
+                <h3 className="font-semibold text-foreground mb-2">
+                  ¡Configura tu Tutor Virtual!
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Personaliza tu experiencia de aprendizaje con un tutor único
+                </p>
+                <Button 
+                  onClick={() => navigate('/profile-setup')}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Configurar Perfil
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Estadísticas rápidas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -214,6 +277,12 @@ const SubjectSelection = () => {
           </p>
         </div>
       </main>
+
+      {/* Virtual Tutor Chat */}
+      <VirtualTutorChat 
+        isOpen={isTutorChatOpen}
+        onClose={() => setIsTutorChatOpen(false)}
+      />
     </div>
   );
 };
