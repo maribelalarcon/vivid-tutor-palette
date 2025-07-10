@@ -43,9 +43,10 @@ const VirtualTutorChat = ({ isOpen, onClose }: VirtualTutorChatProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Initial welcome message
+  // Reset chat history and show welcome message when chat opens
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if (isOpen) {
+      // Reset chat history on new session
       const welcomeMessage = generateWelcomeMessage();
       setMessages([{
         id: '1',
@@ -69,35 +70,26 @@ He visto que te interesa: ${interests || 'aprender cosas nuevas'}, y mi personal
 ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre tus materias, dudas específicas, o simplemente conversar. ¡Estoy aquí para ti! ⚽📚✨`;
   };
 
-  const generateTutorResponse = (userMessage: string): string => {
-    // Esta es una simulación básica. Para funcionalidad completa, se necesitaría Supabase + API de IA
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Respuestas basadas en intereses del usuario
-    if (lowerMessage.includes('historia') || lowerMessage.includes('geografía')) {
-      if (userInterests.includes('Deportes') || userInterests.includes('Fútbol')) {
-        return `¡Excelente pregunta sobre historia! 🏆 Sabes, la historia es como un partido de fútbol épico que dura siglos. Cada civilización es como un equipo que entra al campo, algunas ganan títulos (como el Imperio Romano), otras luchan en divisiones menores, pero todas tienen su historia que contar. ¿Qué período específico te interesa? ¡Vamos a explorarlo juntos como si fuéramos exploradores en busca del gol perfecto! ⚽📜`;
+  const sendMessageToN8N = async (message: string): Promise<string> => {
+    try {
+      const response = await fetch('https://jmog.app.n8n.cloud/webhook/e104e40e-6134-4825-a6f0-8a646d882662/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return `¡Me encanta que preguntes sobre historia! 📚 Como ${tutorName}, te diré que la historia está llena de aventuras increíbles. Cada evento histórico es como una pieza de un gran rompecabezas. ¿Hay algún período o tema específico que te llame la atención?`;
+
+      const data = await response.text();
+      return data || 'Lo siento, no pude generar una respuesta en este momento.';
+    } catch (error) {
+      console.error('Error sending message to n8n:', error);
+      return 'Lo siento, hubo un problema conectándome con el tutor virtual. Por favor inténtalo de nuevo.';
     }
-    
-    if (lowerMessage.includes('matemática') || lowerMessage.includes('número')) {
-      if (userInterests.includes('Deportes')) {
-        return `¡Las matemáticas son como las estadísticas del fútbol! 📊⚽ Piensa en esto: cada gol, cada pase, cada partido tiene números detrás. Las probabilidades, los porcentajes de acierto, ¡incluso la geometría está en cada jugada! ¿Qué problema específico de matemáticas te está dando batalla?`;
-      }
-      return `Las matemáticas son fascinantes, como ${tutorName} te diría que cada problema es un enigma esperando ser resuelto. ¿En qué área específica necesitas ayuda?`;
-    }
-    
-    if (lowerMessage.includes('hola') || lowerMessage.includes('saludo')) {
-      return `¡Hola de nuevo! 😊 Como ${tutorName}, estoy aquí para apoyarte. ¿Hay algo específico en lo que te gustaría trabajar hoy? ¡Vamos a por ello!`;
-    }
-    
-    if (lowerMessage.includes('ayuda') || lowerMessage.includes('no entiendo')) {
-      return `¡Por supuesto que te ayudo! 💪 Recuerda que como ${tutorName}, siempre digo que no hay preguntas tontas, solo oportunidades para aprender. Cuéntame exactamente qué es lo que no entiendes y lo resolvemos paso a paso.`;
-    }
-    
-    // Respuesta general personalizada
-    return `Interesante lo que dices. Como ${tutorName}, creo que cada pregunta es una oportunidad de crecimiento. Basándome en tus intereses en ${userInterests.join(', ')}, podríamos enfocar esto de una manera que te resulte más familiar. ¿Podrías contarme más detalles sobre lo que necesitas?`;
   };
 
   const handleSendMessage = async () => {
@@ -121,9 +113,9 @@ He visto que te interesa: ${interests || 'aprender cosas nuevas'}, y mi personal
       tutorType: tutorName
     });
 
-    // Simulate AI response delay
-    setTimeout(() => {
-      const response = generateTutorResponse(input);
+    // Send message to n8n RAG chat
+    try {
+      const response = await sendMessageToN8N(input);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: response,
@@ -132,8 +124,18 @@ He visto que te interesa: ${interests || 'aprender cosas nuevas'}, y mi personal
       };
       
       setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error in chat:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: 'Lo siento, hubo un problema con la conexión. Por favor inténtalo de nuevo.',
+        role: 'assistant',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
