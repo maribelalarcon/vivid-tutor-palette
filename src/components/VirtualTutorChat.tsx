@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { X, Bot, Sparkles } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
+import '@n8n/chat/style.css';
 import { createChat } from '@n8n/chat';
 
 interface VirtualTutorChatProps {
@@ -26,30 +27,44 @@ const VirtualTutorChat = ({ isOpen, onClose }: VirtualTutorChatProps) => {
         timestamp: new Date().toISOString()
       });
 
-      // Initialize n8n chat
-      createChat({
-        webhookUrl: 'https://jmog.app.n8n.cloud/webhook/e104e40e-6134-4825-a6f0-8a646d882662/chat',
-        target: '#n8n-chat-container',
-        mode: 'window',
-        chatInputKey: 'message',
-        chatSessionKey: 'sessionId',
-        metadata: {
-          userId: user?.id,
-          tutorType: tutorName
-        },
-        i18n: {
-          en: {
-            title: tutorName,
-            subtitle: 'Tu tutor virtual personalizado',
-            footer: '',
-            getStarted: '¡Empezar conversación!',
-            inputPlaceholder: `Pregúntale algo a ${tutorName}...`,
-            closeButtonTooltip: 'Cerrar chat',
-          },
-        },
-      });
+      // Clear any existing chat instance
+      const container = document.getElementById('n8n-chat-container');
+      if (container) {
+        container.innerHTML = '';
+      }
+
+      // Initialize n8n chat with a slight delay to ensure container is ready
+      setTimeout(() => {
+        try {
+          createChat({
+            webhookUrl: 'https://jmog.app.n8n.cloud/webhook/e104e40e-6134-4825-a6f0-8a646d882662/chat',
+            target: '#n8n-chat-container',
+            mode: 'fullscreen',
+            chatInputKey: 'message',
+            chatSessionKey: 'sessionId',
+            loadPreviousSession: false,
+            showWelcomeScreen: false,
+            initialMessages: [
+              `¡Hola ${user?.name?.split(' ')[0] || 'estudiante'}! 👋`,
+              `Soy ${tutorName}, tu tutor virtual personalizado. ¿En qué puedo ayudarte hoy?`
+            ],
+            i18n: {
+              en: {
+                title: tutorName,
+                subtitle: 'Tu tutor virtual personalizado',
+                footer: '',
+                getStarted: '¡Empezar conversación!',
+                inputPlaceholder: `Pregúntale algo a ${tutorName}...`,
+                closeButtonTooltip: 'Cerrar chat',
+              },
+            },
+          });
+        } catch (error) {
+          console.error('Error initializing n8n chat:', error);
+        }
+      }, 100);
     }
-  }, [isOpen, user?.id, tutorName, trackActivity]);
+  }, [isOpen, user?.name, tutorName, trackActivity]);
 
   if (!isOpen) return null;
 
