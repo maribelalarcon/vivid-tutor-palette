@@ -14,7 +14,9 @@ export interface StudentProfile {
   personalInfo: {
     fullName: string;
     age: number;
-    grade: string;
+    course: string;
+    email?: string;
+    phone?: string;
     interests: string[];
   };
   tutorPreferences: {
@@ -48,7 +50,8 @@ export const demoUsers: User[] = [
       personalInfo: {
         fullName: 'María González Pérez',
         age: 15,
-        grade: '4º ESO',
+        course: '4º ESO',
+        email: 'maria.gonzalez@ejemplo.com',
         interests: ['Historia', 'Arte', 'Música']
       },
       tutorPreferences: {
