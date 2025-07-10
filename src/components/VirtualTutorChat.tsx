@@ -72,7 +72,7 @@ He visto que te interesa: ${interests || 'aprender cosas nuevas'}, y mi personal
 
   const sendMessageToN8N = async (message: string): Promise<string> => {
     try {
-      const response = await fetch('https://jmog.app.n8n.cloud/webhook/e104e40e-6134-4825-a6f0-8a646d882662/chat', {
+      const response = await fetch('https://jmog.app.n8n.cloud/webhook-test/bf4dd093-bb02-472c-9454-7ab9af97bd1d', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
