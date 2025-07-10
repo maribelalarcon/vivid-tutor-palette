@@ -55,17 +55,6 @@ const SubjectSelection = () => {
       tutorType: user?.profile?.tutorPreferences?.characterDescription,
       timestamp: new Date().toISOString()
     });
-
-    // Enviar request POST al webhook cuando se abre el chat del tutor
-    try {
-      const response = await fetch('https://jmog.app.n8n.cloud/webhook-test/bf4dd093-bb02-472c-9454-7ab9af97bd1d', {
-        method: 'POST'
-      });
-      const data = await response.text();
-      console.log('Webhook response:', data);
-    } catch (error) {
-      console.error('Error fetching webhook data:', error);
-    }
   };
 
   const getTutorButtonText = () => {
