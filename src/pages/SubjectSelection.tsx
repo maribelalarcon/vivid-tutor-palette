@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,6 +26,20 @@ const SubjectSelection = () => {
   const { user, logout, trackActivity } = useAuthStore();
   const [hoveredSubject, setHoveredSubject] = useState<string | null>(null);
   const [isTutorChatOpen, setIsTutorChatOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchWebhookData = async () => {
+      try {
+        const response = await fetch('https://jmog.app.n8n.cloud/webhook-test/bf4dd093-bb02-472c-9454-7ab9af97bd1d');
+        const data = await response.json();
+        console.log('Webhook response:', data);
+      } catch (error) {
+        console.error('Error fetching webhook data:', error);
+      }
+    };
+
+    fetchWebhookData();
+  }, []);
 
   const handleSubjectSelect = (subjectId: string) => {
     trackActivity({
