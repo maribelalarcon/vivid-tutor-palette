@@ -14,7 +14,9 @@ import {
   Sparkles, 
   ChevronRight,
   Shuffle,
-  Settings
+  Settings,
+  Upload,
+  Camera
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +33,10 @@ const ProfileSetup = () => {
   const [avatar, setAvatar] = useState('');
   const [fullName, setFullName] = useState('');
   const [age, setAge] = useState(15);
+  const [course, setCourse] = useState('4º ESO');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [uploadedPhoto, setUploadedPhoto] = useState<File | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
   const [tutorDescription, setTutorDescription] = useState('');
   const [personality, setPersonality] = useState<string[]>([]);
@@ -92,11 +98,13 @@ const ProfileSetup = () => {
     setIsLoading(true);
     
     const profile = {
-      avatar,
+      avatar: uploadedPhoto ? URL.createObjectURL(uploadedPhoto) : avatar,
       personalInfo: {
         fullName,
         age,
-        grade: '4º ESO',
+        course,
+        email,
+        phone,
         interests
       },
       tutorPreferences: {
@@ -122,7 +130,7 @@ const ProfileSetup = () => {
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
-        return fullName.trim() && avatar;
+        return fullName.trim() && (avatar || uploadedPhoto);
       case 2:
         return interests.length > 0;
       case 3:
@@ -192,24 +200,50 @@ const ProfileSetup = () => {
               <div className="space-y-6">
                 <div className="text-center">
                   <Avatar className="w-24 h-24 mx-auto mb-4">
-                    <AvatarImage src={avatar} alt="Avatar" />
+                    <AvatarImage 
+                      src={uploadedPhoto ? URL.createObjectURL(uploadedPhoto) : avatar} 
+                      alt="Avatar" 
+                    />
                     <AvatarFallback>
                       <User className="w-12 h-12" />
                     </AvatarFallback>
                   </Avatar>
-                  <Button 
-                    onClick={generateRandomAvatar}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Shuffle className="w-4 h-4 mr-2" />
-                    Generar Avatar
-                  </Button>
+                  <div className="flex gap-2 justify-center">
+                    <Button 
+                      onClick={generateRandomAvatar}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Shuffle className="w-4 h-4 mr-2" />
+                      Crear Avatar
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('photo-upload')?.click()}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Subir Foto
+                    </Button>
+                  </div>
+                  <input
+                    id="photo-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setUploadedPhoto(file);
+                        setAvatar(''); // Clear avatar when photo is uploaded
+                      }
+                    }}
+                  />
                 </div>
 
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="fullName">Nombre completo</Label>
+                    <Label htmlFor="fullName">Nombre completo *</Label>
                     <Input
                       id="fullName"
                       value={fullName}
@@ -219,7 +253,7 @@ const ProfileSetup = () => {
                   </div>
                   
                   <div>
-                    <Label htmlFor="age">Edad</Label>
+                    <Label htmlFor="age">Edad *</Label>
                     <Input
                       id="age"
                       type="number"
@@ -227,6 +261,38 @@ const ProfileSetup = () => {
                       onChange={(e) => setAge(parseInt(e.target.value))}
                       min="13"
                       max="18"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="course">Curso</Label>
+                    <Input
+                      id="course"
+                      value={course}
+                      onChange={(e) => setCourse(e.target.value)}
+                      placeholder="4º ESO"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <Label htmlFor="phone">Teléfono (opcional)</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="123 456 789"
                     />
                   </div>
                 </div>
