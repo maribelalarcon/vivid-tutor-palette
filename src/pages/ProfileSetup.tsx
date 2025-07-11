@@ -37,7 +37,7 @@ const ProfileSetup = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [uploadedPhoto, setUploadedPhoto] = useState<File | null>(null);
-  const [interests, setInterests] = useState<string[]>([]);
+  const [interests, setInterests] = useState('');
   const [tutorDescription, setTutorDescription] = useState('');
   const [personality, setPersonality] = useState<string[]>([]);
   const [preferredStyle, setPreferredStyle] = useState('');
@@ -70,13 +70,6 @@ const ProfileSetup = () => {
     setAvatar(avatarUrl);
   };
 
-  const toggleInterest = (interest: string) => {
-    setInterests(prev => 
-      prev.includes(interest) 
-        ? prev.filter(i => i !== interest)
-        : [...prev, interest]
-    );
-  };
 
   const togglePersonality = (trait: string) => {
     setPersonality(prev => 
@@ -132,7 +125,7 @@ const ProfileSetup = () => {
       case 1:
         return fullName.trim() && (avatar || uploadedPhoto);
       case 2:
-        return interests.length > 0;
+        return interests.trim().length > 0;
       case 3:
         return tutorDescription.trim() && personality.length > 0;
       default:
@@ -189,7 +182,7 @@ const ProfileSetup = () => {
             </CardTitle>
             <CardDescription>
               {currentStep === 1 && "Cuéntanos sobre ti"}
-              {currentStep === 2 && "¿Qué te gusta aprender?"}
+              {currentStep === 2 && ""}
               {currentStep === 3 && "Diseña tu tutor ideal"}
             </CardDescription>
           </CardHeader>
@@ -302,20 +295,14 @@ const ProfileSetup = () => {
             {/* Paso 2: Intereses */}
             {currentStep === 2 && (
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Selecciona tus materias e intereses favoritos:
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {availableInterests.map((interest) => (
-                    <Badge
-                      key={interest}
-                      variant={interests.includes(interest) ? "default" : "outline"}
-                      className="p-3 text-center cursor-pointer hover:scale-105 transition-transform"
-                      onClick={() => toggleInterest(interest)}
-                    >
-                      {interest}
-                    </Badge>
-                  ))}
+                <div>
+                  <Label htmlFor="interests">Tus Intereses</Label>
+                  <Input
+                    id="interests"
+                    value={interests}
+                    onChange={(e) => setInterests(e.target.value)}
+                    placeholder="Escribe lo que te interesa"
+                  />
                 </div>
               </div>
             )}
