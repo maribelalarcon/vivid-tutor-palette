@@ -79,8 +79,8 @@ const SubjectSelection = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary-foreground" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                <img src="/lovable-uploads/7e795056-0a51-435d-9ad1-ecf87010910d.png" alt="Logo" className="w-8 h-8 rounded-lg" />
               </div>
               <h1 className="text-xl font-bold text-foreground">TutorIA</h1>
             </div>
