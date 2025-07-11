@@ -372,7 +372,7 @@ const TeacherDashboard = () => {
               <CardContent>
                 <div className="mb-6 p-4 border-2 border-dashed border-accent/20 bg-accent/5 rounded-lg text-center">
                   <div className="flex flex-col items-center space-y-2">
-                    <GraduationCap className="w-8 h-8 text-accent" />
+                    <img src="/lovable-uploads/fecd3295-9f1c-4b04-8d04-0c874d41436e.png" alt="Logo" className="w-8 h-8 rounded" />
                     <p className="text-sm text-foreground font-medium">
                       Subir Exámenes desde Google Drive
                     </p>
@@ -389,7 +389,7 @@ const TeacherDashboard = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
                             <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
-                              <GraduationCap className="w-6 h-6 text-accent" />
+                              <img src="/lovable-uploads/fecd3295-9f1c-4b04-8d04-0c874d41436e.png" alt="Logo" className="w-6 h-6 rounded" />
                             </div>
                             <div>
                               <h3 className="font-medium text-foreground">{exam.title}</h3>

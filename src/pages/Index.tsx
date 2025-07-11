@@ -44,8 +44,8 @@ const Index = () => {
       <header className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-primary rounded-3xl mb-6">
-              <GraduationCap className="w-10 h-10 text-primary-foreground" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-6">
+              <img src="/lovable-uploads/fecd3295-9f1c-4b04-8d04-0c874d41436e.png" alt="Logo" className="w-20 h-20 rounded-3xl" />
             </div>
             
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
