@@ -71,7 +71,7 @@ const VirtualTutorChat = ({ isOpen, onClose }: VirtualTutorChatProps) => {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
       <Card className="w-full max-w-2xl h-[90vh] sm:h-[85vh] flex flex-col">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 border-b max-h-[15vh] min-h-fit px-2 sm:px-4 py-1 sm:py-2">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 border-b max-h-[12vh] min-h-fit px-2 sm:px-4 py-0.5 sm:py-1">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
               <AvatarImage src={user?.profile?.avatar} />
@@ -97,7 +97,7 @@ const VirtualTutorChat = ({ isOpen, onClose }: VirtualTutorChatProps) => {
           </Button>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-hidden p-0 min-h-[75vh]">
+        <CardContent className="flex-1 overflow-hidden p-0 min-h-[78vh]">
           <div id="n8n-chat-container" className="h-full w-full"></div>
         </CardContent>
       </Card>
