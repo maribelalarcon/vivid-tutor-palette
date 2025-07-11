@@ -130,10 +130,22 @@ const TeacherDashboard = () => {
     setIsUploading(true);
 
     try {
+      // Check if user is authenticated
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      
+      if (!authUser) {
+        toast({
+          title: "Error",
+          description: "Debes iniciar sesión para subir archivos",
+          variant: "destructive"
+        });
+        return;
+      }
+
       // Generate unique file path
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
+      const filePath = `${authUser.id}/${fileName}`;
 
       // Upload file to Supabase Storage
       const { error: uploadError } = await supabase.storage
@@ -146,7 +158,7 @@ const TeacherDashboard = () => {
       const { error: dbError } = await supabase
         .from('materials')
         .insert({
-          teacher_id: user.id,
+          teacher_id: authUser.id,
           title: file.name.replace(/\.[^/.]+$/, ""), // Remove file extension
           file_name: file.name,
           file_path: filePath,
@@ -155,7 +167,10 @@ const TeacherDashboard = () => {
           subject: 'Geografía e Historia'
         });
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
 
       toast({
         title: "Éxito",
