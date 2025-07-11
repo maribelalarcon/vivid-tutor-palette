@@ -49,7 +49,7 @@ const Index = () => {
             </div>
             
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              Virtual Tutor{" "}
+              TutorIA{" "}
               <span className="bg-gradient-accent bg-clip-text text-transparent">
                 Academy
               </span>
@@ -84,7 +84,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
-              ¿Por qué elegir Virtual Tutor Academy?
+              ¿Por qué elegir TutorIA?
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Nuestra plataforma combina tecnología avanzada con pedagogía moderna 
@@ -167,10 +167,10 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
               <div className="w-8 h-8 bg-gradient-primary rounded-lg"></div>
-              <span className="font-bold text-foreground">Virtual Tutor Academy</span>
+              <span className="font-bold text-foreground">TutorIA</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2024 Virtual Tutor Academy. Todos los derechos reservados.
+              © 2024 TutorIA. Todos los derechos reservados.
             </p>
           </div>
         </div>

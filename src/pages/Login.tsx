@@ -108,7 +108,7 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4">
             <img src="/lovable-uploads/fecd3295-9f1c-4b04-8d04-0c874d41436e.png" alt="Logo" className="w-16 h-16 rounded-2xl" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Virtual Tutor Academy</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">TutorIA</h1>
           <p className="text-muted-foreground">Accede a tu cuenta para continuar aprendiendo</p>
         </div>
 
@@ -217,7 +217,7 @@ const Login = () => {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 Virtual Tutor Academy. Todos los derechos reservados.
+            © 2024 TutorIA. Todos los derechos reservados.
           </p>
         </div>
       </div>

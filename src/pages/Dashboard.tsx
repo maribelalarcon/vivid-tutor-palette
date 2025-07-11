@@ -54,7 +54,7 @@ const Dashboard = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <div className="w-8 h-8 bg-gradient-primary rounded-lg"></div>
-              <h1 className="text-xl font-bold text-foreground">Virtual Tutor Academy</h1>
+              <h1 className="text-xl font-bold text-foreground">TutorIA</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
