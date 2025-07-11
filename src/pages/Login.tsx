@@ -105,8 +105,8 @@ const Login = () => {
       <div className="w-full max-w-md">
         {/* Logo y título */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-primary rounded-2xl mb-4">
-            <GraduationCap className="w-8 h-8 text-primary-foreground" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4">
+            <img src="/lovable-uploads/fecd3295-9f1c-4b04-8d04-0c874d41436e.png" alt="Logo" className="w-16 h-16 rounded-2xl" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Virtual Tutor Academy</h1>
           <p className="text-muted-foreground">Accede a tu cuenta para continuar aprendiendo</p>
